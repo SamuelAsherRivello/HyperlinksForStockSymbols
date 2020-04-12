@@ -1,0 +1,6 @@
+ACT Symbol|Security Name|Exchange|CQS Symbol|ETF|Round Lot Size|Test Issue|NASDAQ Symbol
+A|Agilent Technologies, Inc. Common Stock|N|A|N|100|N|A
+AA|Alcoa Corporation Common Stock |N|AA|N|100|N|AA
+AAAU|Perth Mint Physical Gold ETF|P|AAAU|Y|100|N|AAAU
+AADR|AdvisorShares Dorsey Wright ADR ETF|P|AADR|Y|100|N|AADR
+AAMC|Altisource Asset Management Corp Com|A|AAMC|N|100|N|AAMC

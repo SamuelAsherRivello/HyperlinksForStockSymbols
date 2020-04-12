@@ -8,14 +8,20 @@
             "<all_urls>"
         ],
         "css": [
-            "./css/content.css"
+            "css/content.css"
         ],
         "js": [
-            "./js/jquery-3.5.0.min.js", 
-            "./js/constants.js",
-            "./js/library.js",
-            "./js/content.js"
+            "js/jquery-3.5.0.min.js", 
+            "js/constants.js",
+            "js/functions.js",
+            "js/content.js"
         ]
       }
+    ],
+    "web_accessible_resources":
+    [
+      "data/temp.txt",
+      "data/nasdaqlisted.txt",
+      "data/otherlisted.txt"
     ]
   }

@@ -1,36 +1,36 @@
 
+
+window.onload = function() 
+{
+    console.log("onload() Complete")
+}
+Initialize();
+
+
 async function Initialize() 
 {
-    let symbolsArray = await LoadStockSymbolsFromFiles(["data/temp.txt", "data/nasdaqlisted.txt"]); //["nasdaqlisted.txt", "otherlisted.txt"]);
+    let symbolsArray = await LoadStockSymbolsFromFiles(["data/nasdaqlisted.txt"]);// "data/otherlisted.txt"]); //["data/temp.txt"]); 
     
-    //symbolsArray = ["AA"];
+    symbolsArray = ["AA", "AAPL", "AAP", "Z"];
+
+    ArraySortReverseAlphabetical(symbolsArray);
 
     destinationArray = symbolsArray.slice();
     destinationArray = ReplaceIndexWrapped(destinationArray, HYPERLINK, TOKEN);
-    document.body.innerHTML = ReplaceAllSymbolsWithinInnerHTML(document.body.innerHTML, symbolsArray, destinationArray);
 
-    let stockSymbolCount = document.body.innerHTML.indexOf("StockSymbolClass");
+    let replacementCount = ReplaceAllSymbolsWithinHTMLElements(symbolsArray);
 
     LogConsoleOutput (function ()
     {
-        if (stockSymbolCount > 0)
-        {
-            console.log ("FOUND " + stockSymbolCount + " out of " + symbolsArray.length + ".");
-        }
-        else
-        {
-            console.log ("NOTHING found out of " + symbolsArray.length + ".");
-        }
+        console.log (replacementCount + " replacements using " + symbolsArray.length + " symbols.");
     });
     
     AddEventListenerToAllElementsByName (STOCK_SYMBOL_NAME, 
         "click", 
         OnClickForStockSymbol,
     );
-
-
+    console.log("Initialize() Complete")
 }
-Initialize();
 
 
 function WaitForSeconds(delay) {
@@ -43,18 +43,18 @@ function WaitForSeconds(delay) {
     })
   }
 
-function OnClickForStockSymbol() 
+function OnClickForStockSymbol(symbol) 
 {
     //Prevent parent page from refreshing
     event.preventDefault();
     
     var params = 'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=1000,height=600,left=100,top=100';
     
-    symbol = event.target.getAttribute(DATA_ATTRIBUTE);
+    if (symbol == null)
+    {
+        symbol = event.target.getAttribute(DATA_ATTRIBUTE);
+    }
     
-    url = DESTINATION_URL;
-    url = url.replace(TOKEN, symbol);
-    OpenAndFocusPopup (url, symbol, params);
-
+    OpenAndFocusPopup (symbol);
     return false;
 };

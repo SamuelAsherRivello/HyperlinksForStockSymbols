@@ -1,3 +1,7 @@
+'use strict';
+
+
+
 async function LoadStockSymbolsFromFiles(fileUrlsArray)
 {
     let symbolsArray = [];
@@ -48,7 +52,7 @@ function LogConsoleOutput (fun)
 
 function AddEventListenerToAllElementsByName (elementName, eventName, f)
 {
-    buttons = document.getElementsByName (elementName);
+    var buttons = document.getElementsByName (elementName);
 
     for (let b = 0; b < buttons.length; b++) 
     {
@@ -69,7 +73,8 @@ function OpenAndFocusPopup(symbol)
 
     var params = 'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=1000,height=600,left=100,top=100';
 
-    let url = DESTINATION_URL;
+    let url = destinationUrlsArray[destinationUrlIndex].url;
+
     url = url.replace(TOKEN, symbol);
 
     //put each symbol in its own window
@@ -79,18 +84,6 @@ function OpenAndFocusPopup(symbol)
     lastPopup.focus();
     return false;
  }
-
-function ReplaceIndexWrapped(find, format, token) 
-{
-    for (var i = 0; i < find.length; i++)
-    {
-        find[i] = find[i].toUpperCase();
-        output = format.replace(new RegExp(token,"g"), find[i])
-        find[i] = output;
-    }
-    return find;
-};
-
 
 function ReplaceAllSymbolsWithinInnerHTML(find, replace) 
 {
@@ -159,13 +152,13 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, fin
                 {
                     if (!alreadyReplacedNodes.includes (nodeOriginal))
                     {
-                        replaceOne = PREFIX_AFTER_REPLACEMENT + findOne;
+                        var replaceOne = PREFIX_AFTER_REPLACEMENT + findOne;
 
                         var replacedText = text.replace(new RegExp(findOne,"ig"), replaceOne);
 
-                        let characterBeforeMatch = Get1CharacterBeforeMatch (text, findOne)
+                        var characterBeforeMatch = Get1CharacterBeforeMatch (text, findOne)
 
-                        let isValidReplacement = characterBeforeMatch != PREFIX_AFTER_REPLACEMENT;
+                        var isValidReplacement = characterBeforeMatch != PREFIX_AFTER_REPLACEMENT;
 
                         var beforeReplacement = nodeOriginal.nodeValue;
                         var isChanged = replacedText !== text;

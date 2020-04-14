@@ -1,0 +1,9 @@
+'use strict';
+
+let destinationUrlsArray = [
+    DESTINATION_URL_GOOGLE,
+    DESTINATION_URL_YAHOO,
+    DESTINATION_URL_TRADINGVIEW,
+    DESTINATION_URL_ROBINHOOD
+];
+let destinationUrlIndex = DESTINATION_URL_INDEX_DEFAULT;

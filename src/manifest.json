@@ -2,6 +2,15 @@
     "manifest_version": 2,
     "version":"0.1",
     "name": "Hyperlinks For Stock Symbols",
+    "browser_action": {
+      "default_title": "Hyperlinks For Stock Symbols!",
+      "default_icon": "images/icon.png",
+      "default_popup": "html/popup.html"
+    },
+    "permissions": [
+      "storage"
+    ],
+    "content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'",
     "content_scripts": [
       {
         "matches": [
@@ -11,17 +20,21 @@
             "css/content.css"
         ],
         "js": [
-            "js/jquery-3.5.0.min.js", 
+            "3rdParty/jquery-3.5.0.min.js", 
             "js/constants.js",
+            "js/chrome.js",
             "js/functions.js",
-            "js/content.js"
+            "js/content.js",
+            "js/messaging.js",
+            "js/data.js"
         ]
       }
     ],
     "web_accessible_resources":
     [
-      "data/temp.txt",
-      "data/nasdaqlisted.txt",
-      "data/otherlisted.txt"
+      "text/temp.txt",
+      "text/nasdaqlisted.txt",
+      "text/otherlisted.txt"
     ]
+   
   }

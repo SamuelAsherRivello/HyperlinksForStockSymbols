@@ -12,6 +12,9 @@ https://trello.com/b/lBFQudlR/hyperlinksforstocksymbols
 ## Stock Symbol Examples
 * AAPL
 * aapl
+* skip a line
+* AAPL
+* skip a line
 * XOM
 * [XOM]
 * AXOMA

@@ -1,5 +1,5 @@
 # HyperlinksForStockSymbols
-This is a chrome extension which makes Hyperlinks For Stock Symbols appearing on the current page.
+This is a chrome extension which makes Hyperlinks For Stock Symbols appear on the current webpage.
 
 # How To Use
 1. Install the Plugin. It is **not** yet publically available for install. Date: TBD.

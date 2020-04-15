@@ -13,7 +13,9 @@ https://trello.com/b/lBFQudlR/hyperlinksforstocksymbols
 * AAPL
 * aapl
 * skip a line
-* AAPL
+* 3AAPL3
+* skip a line
+* TAAPLT
 * skip a line
 * XOM
 * [XOM]

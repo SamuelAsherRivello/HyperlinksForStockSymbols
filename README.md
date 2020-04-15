@@ -19,4 +19,8 @@ https://trello.com/b/lBFQudlR/hyperlinksforstocksymbols
 * [XOM]
 * AXOMA
 * _XOM_
+* ZOM
+* [ZOM]
+* AZOMA
+* _ZOM_
 

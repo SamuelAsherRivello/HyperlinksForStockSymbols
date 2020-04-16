@@ -1,22 +1,20 @@
 'use strict';
 
-
-
 async function LoadStockSymbolsFromFiles(fileUrlsArray)
 {
-    let symbolsArray = [];
+    let stockObjectArray = [];
 
     for (let f = 0; f < fileUrlsArray.length; f++) 
     {
-        let nextArray = await LoadStockSymbolsFromSingleFile(fileUrlsArray[f]);
-        symbolsArray.push.apply(symbolsArray, nextArray);
+        let nextStockObjectArray = await LoadStockSymbolsFromSingleFile(fileUrlsArray[f]);
+        stockObjectArray.push.apply(stockObjectArray, nextStockObjectArray);
     }
-    return symbolsArray;
+    return stockObjectArray;
 }
 
 async function LoadStockSymbolsFromSingleFile(url)
 {
-    let symbolsArray = [];
+    let stockObjectArray = [];
     let u = chrome.runtime.getURL(url);
 
     await fetch(u, {mode: 'cors'})
@@ -28,14 +26,15 @@ async function LoadStockSymbolsFromSingleFile(url)
         pageLines.forEach((line) => 
         {
             const pipeTokens = line.split("|");
-            symbolsArray.push(pipeTokens[0])
+            const stockSymbol = {"stockSymbol": pipeTokens[0], "stockName": pipeTokens[1]};
+            stockObjectArray.push(stockSymbol)
         });
     })
     .catch(function(error) {
         console.log('Request failed', error)
     });
 
-    return symbolsArray;
+    return stockObjectArray;
 }
 
 function LogConsoleOutput (fun)
@@ -64,41 +63,29 @@ function AddEventListenerToAllElementsByName (elementName, eventName, f)
 }
 
 var lastPopup;
-function OpenAndFocusPopup(symbol) 
+function OpenAndFocusPopup(stockSymbol) 
 {
+    console.log ("s = " + stockSymbol);
     if(lastPopup)
     {
-        //lastPopup.close();
+        lastPopup.close();
     }
 
-    var params = 'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=1000,height=600,left=100,top=100';
-
     let url = destinationUrlsArray[destinationUrlIndex].url;
-
-    url = url.replace(TOKEN, symbol);
+    url = url.replace(TOKEN, stockSymbol);
 
     //put each symbol in its own window
     let target = "_blank";
 
+    var params = 'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=1000,height=600,left=100,top=100';
     lastPopup = window.open(url, target, params);
+
     lastPopup.focus();
     return false;
  }
 
-function ReplaceAllSymbolsWithinInnerHTML(find, replace) 
-{
-    let str = document.body.innerHTML; 
 
-    for (var i = 0; i < find.length; i++)
-    {
-        str = str.replace(new RegExp("\\b"+find[i]+"\\b"), replace[i]);
-    }
-      
-    document.body.innerHTML = str;
-};
-
-
-function ReplaceAllSymbolsWithinHTMLElements(findArray) 
+function ReplaceAllSymbolsWithinHTMLElements(stockObjectArray) 
 {
     let replacementCount = 0;
 
@@ -108,12 +95,12 @@ function ReplaceAllSymbolsWithinHTMLElements(findArray)
     var elements = document.getElementsByTagName('*');
     let alreadyReplacedNodes = [];
 
-    for (var i = 0; i < findArray.length; i++)
+    for (var i = 0; i < stockObjectArray.length; i++)
     {
-        if (!alreadyReplacedValues.includes (findArray[i]))
+        if (!alreadyReplacedValues.includes (stockObjectArray[i].stockSymbol))
         {
-            alreadyReplacedValues.push (findArray[i]);
-            var innerReplacementCount = ReplaceOneSymbolsWithinHTMLElements (alreadyReplacedNodes, elements, findArray[i]);
+            alreadyReplacedValues.push (stockObjectArray[i].stockSymbol);
+            var innerReplacementCount = ReplaceOneSymbolsWithinHTMLElements (alreadyReplacedNodes, elements, stockObjectArray[i]);
             replacementCount += innerReplacementCount;
         }
     }
@@ -121,7 +108,7 @@ function ReplaceAllSymbolsWithinHTMLElements(findArray)
 
 }
 
-function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, findOne) 
+function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, stockObject) 
 {
     let nodeMatches = 0;
     let replacementCount = 0;
@@ -138,51 +125,74 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, fin
             {
                 nodeMatches++;
 
-                var text = nodeOriginal.nodeValue;
+                var textOriginal = nodeOriginal.nodeValue;
+
+                //Remove line breaks
+                textOriginal = textOriginal.replace(/(\r\n|\n|\r)/gm,""); 
+
+                //Avoid if ONLY whitespace
+                const isOnlyWhitespace = !(/\S/.test(textOriginal));
 
                 //Avoid javascript results
                 const jsRegex = /function/g;
-                const jsMatch = text.search(jsRegex);
+                const isJS = textOriginal.search(jsRegex) != -1;
 
                 //Avoid javascript results
                 const cssRegex = /color:/g;
-                const cssMatch = text.search(cssRegex);
+                const isCSS = textOriginal.search(cssRegex) != -1;
 
-                if (jsMatch == -1 && cssMatch == -1)
+                if (!isJS && !isCSS && !isOnlyWhitespace)
                 {
-                    if (!alreadyReplacedNodes.includes (nodeOriginal))
+                    let stockSymbol = stockObject.stockSymbol;
+                    let stockSymbolWithPrefix = PREFIX_AFTER_REPLACEMENT + stockSymbol;
+
+                    if (textOriginal.length >= HAYSTACK_MIN_LENGTH && 
+                        stockSymbol.length >= NEEDLE_MIN_LENGTH && 
+                        !alreadyReplacedNodes.includes (nodeOriginal))
                     {
-                        var replaceOne = PREFIX_AFTER_REPLACEMENT + findOne;
+                       
+                        //Does it contain "AAPL"
+                        var stockSymbolRegex = new RegExp(StringFriendlyRegExp(/\bXXX\b/, stockSymbol ), 'gi');
+                        const isStockSymbol = textOriginal.search(stockSymbolRegex) != -1;
 
-                        var replacedText = text.replace(new RegExp(findOne,"ig"), replaceOne);
+                         //Does it contain "$AAPL"
+                        var stockSymbolWithPrefixRegex = new RegExp(StringFriendlyRegExp(/\bXXX\b/, stockSymbolWithPrefix ), 'gi');
+                        const isStockSymbolWithPrefix = textOriginal.search(stockSymbolWithPrefixRegex) != -1;
 
-                        var characterBeforeMatch = Get1CharacterBeforeMatch (text, findOne)
-
-                        var isValidReplacement = characterBeforeMatch != PREFIX_AFTER_REPLACEMENT;
-
-                        var beforeReplacement = nodeOriginal.nodeValue;
-                        var isChanged = replacedText !== text;
-                        if (isChanged && isValidReplacement) 
+                        if (isStockSymbol && !isStockSymbolWithPrefix) 
                         {
+                  
                             replacementCount++;
 
+                            //Create replacement
+                            var textReplacement = textOriginal.replace (stockSymbolRegex, stockSymbolWithPrefix.toUpperCase());
+
                             //Set content
-                            var nodeReplacement = document.createTextNode(replacedText);
+                            var nodeReplacement = document.createTextNode(textReplacement);
                             element.replaceChild(nodeReplacement, nodeOriginal);
 
-                            //console.log ("\t" + nodeOriginal.nodeValue + " => " +  nodeReplacement.nodeValue);
-
-                            //Set styling
-                            //TODO.........................
-
                             //Set functionality
-                            element.addEventListener("click", function ()
+                            element.addEventListener("click", function (event)
                             {
-                                OpenAndFocusPopup(findOne)
+                                event.preventDefault();
+                                console.log (event.target);
+                                OpenAndFocusPopup(stockObject.stockSymbol)
                             });
 
+                    
+                            //Set Styling
+                            //var newDiv = document.createElement("div"); 
+                            //newDiv.setAttribute("class", "tooltip");
+                            //newDiv.setAttribute("title", "hello");
+                            //var newContent = document.createTextNode(stockObject.stockName); 
+                            //element.appendChild(newContent);  
+
+                
                             //Store
                             alreadyReplacedNodes.push (nodeOriginal);
+
+                            //console.log ("b4: '" + nodeOriginal.data + "' and: '" + nodeReplacement.data + "' for '" + stockSymbol + "'.");
+
                         }
                     }
                    
@@ -194,11 +204,21 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, fin
     return replacementCount;
 }
 
+function StringFriendlyRegExp(source, insertMe)
+{
+    return RegExp(source.toString().replace(/\//g,"").replace(/XXX/g, insertMe), "g")
+};
 
 function ArraySortReverseAlphabetical(array)
 {
-    array.sort();
-    array.reverse();
+    for (let i = 0; i < array.length; i++) {
+        const element = array[i];
+        if (element == null && element.length == 0)
+        {
+            console.log ("bad at : " + i);
+        }
+    }
+    array.sort((a, b) => (a.stockName > b.stockName) ? 1 : -1)
 }
 
 function ArrayLog (array)
@@ -206,16 +226,5 @@ function ArrayLog (array)
     for (let i = 0; i < array.length; i++) {
         console.log(array[i]);
     }
-}
-
-
-function Get1CharacterBeforeMatch (text, findOne)
-{
-    let index = text.indexOf (findOne);
-    if (index != -1)
-    {
-        return text.substring (index - 1, index);
-    }
-    return index;
 }
 

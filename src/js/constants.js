@@ -1,5 +1,10 @@
 'use strict';
 
+//
+const NEEDLE_MIN_LENGTH = 3; //e.g. "AAPL"
+const HAYSTACK_MIN_LENGTH = NEEDLE_MIN_LENGTH; //e.g. "I love AAPL"
+
+//
 let TOKEN = "XXX";
 //
 let HYPERLINK = "";
@@ -9,7 +14,6 @@ HYPERLINK += "<span class='tooltiptext'>Tooltip text</span>";
 HYPERLINK += "</div>";
 //
 let PREFIX_AFTER_REPLACEMENT = "$";
-let DATA_ATTRIBUTE = "data";
 let STOCK_SYMBOL_NAME = "StockSymbolName";
 
 //OPTIONS

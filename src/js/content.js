@@ -23,6 +23,13 @@ $( document ).ready(function()
         theme: 'tooltipster-noir'
     });
 
+    //???????????????????????
+    //HACK - for some reason, if this is false, then *LATER* the popup will not show the popup-ad
+    if (true || HAS_ADVERTISING_ON_CONTENT_PAGE)
+    {
+        AddAdvertisingAtopBody ($('head'), $('body'));
+    }
+    
     MessagingInitializeContentPage();
 });
 
@@ -37,8 +44,6 @@ ChromeStorageOnChanged (KEY_DESTINATION_URL_INDEX, function (value)
 {
     destinationUrlIndex = value;
 });
-
-
 
 Initialize();
 

@@ -1,6 +1,10 @@
 'use strict';
 
 //
+const HAS_ADVERTISING_ON_CONTENT_PAGE = true; //never for users, but good for testing stuff
+const HAS_ADVERTISING_ON_STOCK_SYMBOL_PAGE = true;
+               
+//
 const NEEDLE_MIN_LENGTH = 3; //e.g. "AAPL"
 const HAYSTACK_MIN_LENGTH = NEEDLE_MIN_LENGTH; //e.g. "I love AAPL"
 

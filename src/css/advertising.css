@@ -1,0 +1,12 @@
+
+.advertisingClass
+{
+    min-height: 100px;
+    width: 100%;
+    background-color: grey;
+    font-size: x-large;
+    color: ivory;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+}

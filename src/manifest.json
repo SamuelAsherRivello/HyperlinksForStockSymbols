@@ -18,11 +18,13 @@
         ],
         "css": [
             "css/content.css",
+            "css/advertising.css",
             "3rdParty/tooltipster/dist/css/tooltipster.bundle.min.css"
         ],
         "js": [
             "3rdParty/jquery-3.5.0.min.js", 
             "3rdParty/tooltipster/dist/js/tooltipster.bundle.min.js",
+            "js/advertising.js",
             "js/constants.js",
             "js/chrome.js",
             "js/functions.js",

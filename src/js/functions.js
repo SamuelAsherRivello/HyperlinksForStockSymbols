@@ -65,7 +65,9 @@ function AddEventListenerToAllElementsByName (elementName, eventName, f)
 var lastPopup;
 function OpenAndFocusPopup(stockSymbol) 
 {
-    console.log ("s = " + stockSymbol);
+    //KEEP
+    console.log ("OpenAndFocusPopup() stockSymbol=" + stockSymbol);
+
     if(lastPopup)
     {
         lastPopup.close();
@@ -79,6 +81,22 @@ function OpenAndFocusPopup(stockSymbol)
 
     var params = 'scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=1000,height=600,left=100,top=100';
     lastPopup = window.open(url, target, params);
+    //lastPopup.document.body.innerHTML = '<iframe src="'+url+'" width="100%" height="100%" frameborder="0" scrolling="no" id="myFrame"></iframe>';
+    lastPopup.document.title = url;
+
+    if (HAS_ADVERTISING_ON_STOCK_SYMBOL_PAGE)
+    {
+        console.log ("onload1");
+
+        lastPopup.onload = function () 
+        {
+            console.log ("onload2");
+
+            var head = lastPopup.document.$('head');
+            var body = lastPopup.document.$('body');
+            AddAdvertisingAtopBody (head, body);
+        }
+    }
 
     lastPopup.focus();
     return false;

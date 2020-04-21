@@ -19,11 +19,8 @@ https://trello.com/b/lBFQudlR/hyperlinksforstocksymbols
 * TAAPLT
 * skip a line
 * XOM
-* [XOM]
-* AXOMA
-* _XOM_
-* ZOM
-* [ZOM]
-* AZOMA
-* _ZOM_
+* [ZTO]
+* AZTOA
+* _ZTO_
+* ZTO
 

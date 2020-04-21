@@ -24,6 +24,7 @@
         "js": [
             "3rdParty/jquery-3.5.0.min.js", 
             "3rdParty/tooltipster/dist/js/tooltipster.bundle.min.js",
+            "js/classes/stock.js",
             "js/advertising.js",
             "js/constants.js",
             "js/chrome.js",

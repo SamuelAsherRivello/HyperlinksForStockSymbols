@@ -1,8 +1,31 @@
-A|Agilent Technologies, Inc. Common Stock|N|A|N|100|N|A
-AA|Alcoa Corporation Common Stock |N|AA|N|100|N|AA
-AAPL|This is apple from the temp|A|AAMC|N|100|N|AAMC
-AAAU|Perth Mint Physical Gold ETF|P|AAAU|Y|100|N|AAAU
-AADR|AdvisorShares Dorsey Wright ADR ETF|P|AADR|Y|100|N|AADR
-AAMC|Altisource Asset Management Corp Com|A|AAMC|N|100|N|AAMC
-XOM| this is the xom too
-zom| this is the zom
+AACG|ATA Creativity Global - American Depositary Shares, each representing two common shares|G|N|N|100|N|N
+AAL|American Airlines Group, Inc. - Common Stock|Q|N|N|100|N|N
+AAME|Atlantic American Corporation - Common Stock|G|N|N|100|N|N
+AAOI|Applied Optoelectronics, Inc. - Common Stock|G|N|N|100|N|N
+AAON|AAON, Inc. - Common Stock|Q|N|N|100|N|N
+AAPL|Apple Inc. - Common Stock|Q|N|N|100|N|N
+ZBH|Zimmer Biomet Holdings, Inc. Common Stock|N|ZBH|N|100|N|ZBH
+ZBZX|BATS BZX Exchange test issue|Z|ZBZX|N|100|Y|ZBZX
+ZCAN|SPDR Solactive Canada ETF|P|ZCAN|Y|100|N|ZCAN
+ZDEU|SPDR Solactive Germany ETF|P|ZDEU|Y|100|N|ZDEU
+ZDGE|Zedge, Inc. Class B Common Stock |A|ZDGE|N|100|N|ZDGE
+ZEN|Zendesk, Inc. Common Stock|N|ZEN|N|100|N|ZEN
+ZEXIT|IEX Test Company Test Symbol Two for IEX|V|ZEXIT|N|100|Y|ZEXIT
+ZGBR|SPDR Solactive United Kingdom ETF|P|ZGBR|Y|100|N|ZGBR
+ZHOK|SPDR Solactive Hong Kong ETF|P|ZHOK|Y|100|N|ZHOK
+ZIEXT|IEX Test Company Test Symbol One for IEX|V|ZIEXT|N|100|Y|ZIEXT
+ZIG|The Acquirers Fund|P|ZIG|Y|100|N|ZIG
+ZJPN|SPDR Solactive Japan ETF|P|ZJPN|Y|100|N|ZJPN
+ZMLP|Direxion Zacks MLP High Income Index Shares|P|ZMLP|Y|100|N|ZMLP
+ZNH|China Southern Airlines Company Limited Common Stock|N|ZNH|N|100|N|ZNH
+ZOM|Zomedica Pharmaceuticals Corp. Common Shares|A|ZOM|N|100|N|ZOM
+ZROZ|PIMCO 25  Year Zero Coupon U.S. Treasury Index Exchange-Traded Fund|P|ZROZ|Y|100|N|ZROZ
+ZSL|ProShares UltraShort Silver|P|ZSL|Y|100|N|ZSL
+ZTEST|BATS BZX Exchange Common Stock (test issue)|Z|ZTEST|N|100|Y|ZTEST
+ZTO|ZTO Express (Cayman) Inc. American Depositary Shares, each representing one Class A ordinary share.|N|ZTO|N|100|N|ZTO
+ZTR|Virtus Total Return Fund Inc.|N|ZTR|N|100|N|ZTR
+ZTS|Zoetis Inc. Class A Common Stock|N|ZTS|N|100|N|ZTS
+ZUO|Zuora, Inc. Class A Common Stock|N|ZUO|N|100|N|ZUO
+ZVV|NYSE ARCA test stock|P|ZVV|N|100|Y|ZVV
+ZXIET|IEX Test Company Test Symbol Three for IEX|V|ZXIET|N|100|Y|ZXIET
+ZYME|Zymeworks Inc. Common Shares|N|ZYME|N|100|N|ZYME

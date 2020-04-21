@@ -1,4 +1,5 @@
 A|Agilent Technologies, Inc. Common Stock|N|A|N|100|N|A
+AAL|American Airlines Group, Inc. - Common Stock|Q|N|N|100|N|N
 AA|Alcoa Corporation Common Stock |N|AA|N|100|N|AA
 AAAU|Perth Mint Physical Gold ETF|P|AAAU|Y|100|N|AAAU
 AADR|AdvisorShares Dorsey Wright ADR ETF|P|AADR|Y|100|N|AADR

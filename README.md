@@ -12,7 +12,9 @@ https://trello.com/b/lBFQudlR/hyperlinksforstocksymbols
 ## Stock Symbol Examples
 * AAPL
 * aapl
-* and here is aapl in a sentence
+* and here is aapl in a sentence 1
+* **and here is aapl in a sentence 2**
+* _and here is aapl in a sentence 2_
 * skip a line
 * 3AAPL3
 * skip a line

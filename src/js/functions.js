@@ -130,97 +130,143 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, sto
 {
     let nodeMatches = 0;
     let replacementCount = 0;
+    let totalChecks = 0;
+    
+
+    loop1:
     for (var i = 0; i < elements.length; i++) 
     {
         var element = elements[i];
     
+        loop2:
         for (var j = 0; j < element.childNodes.length; j++) 
         {
+            totalChecks++;
+
+            if (totalChecks > MAX_REPLACEMENT_CHECKS)
+            {
+                console.log ("REACHED LIMIT: " + MAX_REPLACEMENT_CHECKS + ". Fix this loop to run without max.")
+                break loop1;  // breaks out of loop1 and loop2
+            }
+
             var nodeOriginal = element.childNodes[j];
-    
+
+            //Find text contents
+            var textOriginal = nodeOriginal.nodeValue;
+
             // Find display text (not, for ex., code or tags)
-            if (nodeOriginal.nodeType == 3) 
+            if (nodeOriginal.nodeType == 3)
             {
                 nodeMatches++;
-
-                var textOriginal = nodeOriginal.nodeValue;
 
                 //Remove line breaks
                 textOriginal = textOriginal.replace(/(\r\n|\n|\r)/gm,""); 
 
-                //Avoid if ONLY whitespace
-                const isOnlyWhitespace = !(/\S/.test(textOriginal));
+                var textOriginalWhitespaceRemoved = textOriginal.replace(" ", "");
+                if (textOriginalWhitespaceRemoved.length > 0) 
+                {   
+                    //Avoid if ONLY whitespace
+                    const isOnlyWhitespace = !(/\S/.test(textOriginal));
 
-                //Avoid javascript results
-                const jsRegex = /function/g;
-                const isJS = textOriginal.search(jsRegex) != -1;
+                    //Avoid javascript results
+                    const jsRegex = /function/g;
+                    const isJS = textOriginal.search(jsRegex) != -1;
 
-                //Avoid javascript results
-                const cssRegex = /color:/g;
-                const isCSS = textOriginal.search(cssRegex) != -1;
+                    //Avoid javascript results
+                    const cssRegex = /color:/g;
+                    const isCSS = textOriginal.search(cssRegex) != -1;
 
-                if (!isJS && !isCSS && !isOnlyWhitespace)
-                {
-                    let stockExchange = stockObject.stockExchange;
-                    let stockSymbol = stockObject.stockSymbol;
-                    let stockSymbolReplacement = PREFIX_AFTER_REPLACEMENT + stockExchange + ":" + stockSymbol;
+                    //Avoid $ results
+                    const isPrefixed = textOriginal.includes (PREFIX_AFTER_REPLACEMENT);
 
-                    if (textOriginal.length >= HAYSTACK_MIN_LENGTH && 
-                        stockSymbol.length >= NEEDLE_MIN_LENGTH && 
-                        !alreadyReplacedNodes.includes (nodeOriginal))
+                    if (!isJS && !isCSS && !isOnlyWhitespace && !isPrefixed)
                     {
-                       
-                        //Does it contain "AAPL"
-                        var stockSymbolRegex = new RegExp(StringFriendlyRegExp(/\bXXX\b/, stockSymbol ), 'gi');
-                        const isStockSymbol = textOriginal.search(stockSymbolRegex) != -1;
+                        let stockExchange = stockObject.stockExchange;
+                        let stockSymbol = stockObject.stockSymbol;
 
-                         //Does it contain "$AAPL"
-                        var stockSymbolReplacementRegex = new RegExp(StringFriendlyRegExp(/\bXXX\b/, stockSymbolReplacement ), 'gi');
-                        const isStockSymbolReplacement = textOriginal.search(stockSymbolReplacementRegex) != -1;
-
-                        if (isStockSymbol && !isStockSymbolReplacement) 
+                        //Create replacement
+                        let stockSymbolReplacement = "";
+                        if (HAS_STOCK_EXCHANGE_IN_REPLACEMENT)
                         {
-                  
-                            replacementCount++;
+                            stockSymbolReplacement = PREFIX_AFTER_REPLACEMENT + stockExchange + ":" + stockSymbol;
+                        }
+                        else
+                        {
+                            stockSymbolReplacement = PREFIX_AFTER_REPLACEMENT + stockSymbol;
+                        }
+              
+                        if (textOriginal.length >= HAYSTACK_MIN_LENGTH && 
+                            stockSymbol.length >= NEEDLE_MIN_LENGTH && 
+                            !alreadyReplacedNodes.includes (nodeOriginal))
+                        {
+                            //Does it contain "AAPL"
+                            var stockSymbolRegex = new RegExp(StringFriendlyRegExp(/\bXXX\b/, stockSymbol ), 'gi');
+                            const isStockSymbol = textOriginal.search(stockSymbolRegex) != -1;
 
-                            //Create replacement
-                            var textReplacement = textOriginal.replace (stockSymbolRegex, stockSymbolReplacement.toUpperCase());
-
-                            //Set content
-                            var nodeReplacement = document.createTextNode(textReplacement);
-                            element.replaceChild(nodeReplacement, nodeOriginal);
-
-                            //Set functionality
-                            element.addEventListener("click", function (event)
+                            if (isStockSymbol) 
                             {
-                                event.preventDefault();
-                                console.log (event.target);
-                                OpenAndFocusPopup(stockObject.stockSymbol)
-                            });
+                                replacementCount++;
+
+                                //Create the before, during, after
+                                var tokens = textOriginal.split (stockSymbolRegex);
+                                tokens.splice(1, 0, stockSymbolReplacement.toUpperCase());
+                              
+                                //Set content
+                                var divNode = document.createElement("DIV");
+
+                                //Add the before, during, after
+                                var spanNode1 = CreateNewSpanElement (tokens[0])
+                                divNode.appendChild(spanNode1);
+                                var spanNode2 = CreateNewSpanElement (tokens[1], "stockSymbolClass")
+                                divNode.appendChild(spanNode2);
+                                var spanNode3 = CreateNewSpanElement (tokens[2])
+                                divNode.appendChild(spanNode3);
+
+                                //
+                                element.replaceChild(divNode, nodeOriginal);
+
+                                //Set functionality
+                                divNode.addEventListener("click", function (event)
+                                {
+                                    event.preventDefault(); //Needed? Trying to avoid old hrefs
+                                    OpenAndFocusPopup(stockObject.stockSymbol)
+                                });
+                        
+                                //Set Styling
+                                //var newDiv = document.createElement("div"); 
+                                //newDiv.setAttribute("class", "tooltip");
+                                //newDiv.setAttribute("title", "hello");
+                                //var newContent = document.createTextNode(stockObject.stockName); 
+                                //element.appendChild(newContent);  
 
                     
-                            //Set Styling
-                            //var newDiv = document.createElement("div"); 
-                            //newDiv.setAttribute("class", "tooltip");
-                            //newDiv.setAttribute("title", "hello");
-                            //var newContent = document.createTextNode(stockObject.stockName); 
-                            //element.appendChild(newContent);  
+                                //Store
+                                alreadyReplacedNodes.push (nodeOriginal);
 
-                
-                            //Store
-                            alreadyReplacedNodes.push (nodeOriginal);
+                                //console.log ("b4: '" + nodeOriginal.data + "' and: '" + nodeReplacement.data + "' for '" + stockSymbol + "'.");
 
-                            //console.log ("b4: '" + nodeOriginal.data + "' and: '" + nodeReplacement.data + "' for '" + stockSymbol + "'.");
-
+                            }
                         }
+                    
                     }
-                   
                 }
             }
         }
     }
+    //console.log ("totalChecks: " + totalChecks);
     //console.log("n = " + nodeMatches + " and t " + replacementCount);
     return replacementCount;
+}
+
+function CreateNewSpanElement (text, className)
+{
+    var spanElement = document.createElement("SPAN");
+    spanElement.appendChild (document.createTextNode (text))
+    if (className != null)
+    {
+        spanElement.classList.add(className);
+    }
+    return spanElement;
 }
 
 function StringFriendlyRegExp(source, insertMe)

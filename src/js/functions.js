@@ -25,8 +25,8 @@ async function LoadStockSymbolsFromSingleFile(url)
         const pageLines = text.split(/\r?\n/);
         pageLines.forEach((line) => 
         {
-            const pipeTokens = line.split("|");
-            const stockSymbol = {"stockSymbol": pipeTokens[0], "stockName": pipeTokens[1]};
+            var stock = Stock.CreateNewFromLine(line);
+            const stockSymbol = stock.GetObject();
             stockObjectArray.push(stockSymbol)
         });
     })
@@ -161,8 +161,9 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, sto
 
                 if (!isJS && !isCSS && !isOnlyWhitespace)
                 {
+                    let stockExchange = stockObject.stockExchange;
                     let stockSymbol = stockObject.stockSymbol;
-                    let stockSymbolWithPrefix = PREFIX_AFTER_REPLACEMENT + stockSymbol;
+                    let stockSymbolReplacement = PREFIX_AFTER_REPLACEMENT + stockExchange + ":" + stockSymbol;
 
                     if (textOriginal.length >= HAYSTACK_MIN_LENGTH && 
                         stockSymbol.length >= NEEDLE_MIN_LENGTH && 
@@ -174,16 +175,16 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, sto
                         const isStockSymbol = textOriginal.search(stockSymbolRegex) != -1;
 
                          //Does it contain "$AAPL"
-                        var stockSymbolWithPrefixRegex = new RegExp(StringFriendlyRegExp(/\bXXX\b/, stockSymbolWithPrefix ), 'gi');
-                        const isStockSymbolWithPrefix = textOriginal.search(stockSymbolWithPrefixRegex) != -1;
+                        var stockSymbolReplacementRegex = new RegExp(StringFriendlyRegExp(/\bXXX\b/, stockSymbolReplacement ), 'gi');
+                        const isStockSymbolReplacement = textOriginal.search(stockSymbolReplacementRegex) != -1;
 
-                        if (isStockSymbol && !isStockSymbolWithPrefix) 
+                        if (isStockSymbol && !isStockSymbolReplacement) 
                         {
                   
                             replacementCount++;
 
                             //Create replacement
-                            var textReplacement = textOriginal.replace (stockSymbolRegex, stockSymbolWithPrefix.toUpperCase());
+                            var textReplacement = textOriginal.replace (stockSymbolRegex, stockSymbolReplacement.toUpperCase());
 
                             //Set content
                             var nodeReplacement = document.createTextNode(textReplacement);

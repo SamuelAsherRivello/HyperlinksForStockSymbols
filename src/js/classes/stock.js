@@ -13,7 +13,6 @@ class Stock
     {
         const pipeTokens = line.split("|");
 
-        console.log ("pipeTokens[0]: " + pipeTokens[0]);
         var stock = new Stock
         (
             pipeTokens[0], 

@@ -5,8 +5,10 @@ const HAS_ADVERTISING_ON_CONTENT_PAGE = true; //never for users, but good for te
 const HAS_ADVERTISING_ON_STOCK_SYMBOL_PAGE = true;
                
 //
+const HAS_STOCK_EXCHANGE_IN_REPLACEMENT = false;
 const NEEDLE_MIN_LENGTH = 3; //e.g. "AAPL"
 const HAYSTACK_MIN_LENGTH = NEEDLE_MIN_LENGTH; //e.g. "I love AAPL"
+const MAX_REPLACEMENT_CHECKS = 50000;
 
 //
 let TOKEN = "XXX";

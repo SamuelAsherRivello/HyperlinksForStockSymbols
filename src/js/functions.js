@@ -194,6 +194,7 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, sto
                         {
                             stockSymbolReplacement = PREFIX_AFTER_REPLACEMENT + stockSymbol;
                         }
+                        stockSymbolReplacement = stockSymbolReplacement.toUpperCase();
               
                         if (textOriginal.length >= HAYSTACK_MIN_LENGTH && 
                             stockSymbol.length >= NEEDLE_MIN_LENGTH && 
@@ -209,7 +210,7 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, sto
 
                                 //Create the before, during, after
                                 var tokens = textOriginal.split (stockSymbolRegex);
-                                tokens.splice(1, 0, stockSymbolReplacement.toUpperCase());
+                                tokens.splice(1, 0, stockSymbolReplacement);
                               
                                 //Set content
                                 var divNode = document.createElement("DIV");
@@ -226,25 +227,23 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, sto
                                 element.replaceChild(divNode, nodeOriginal);
 
                                 //Set functionality
-                                divNode.addEventListener("click", function (event)
+                                spanNode2.addEventListener("click", function (event)
                                 {
                                     event.preventDefault(); //Needed? Trying to avoid old hrefs
                                     OpenAndFocusPopup(stockObject.stockSymbol)
                                 });
-                        
-                                //Set Styling
-                                //var newDiv = document.createElement("div"); 
-                                //newDiv.setAttribute("class", "tooltip");
-                                //newDiv.setAttribute("title", "hello");
-                                //var newContent = document.createTextNode(stockObject.stockName); 
-                                //element.appendChild(newContent);  
 
+                                // $(spanNode2, 
+                                //     {
+                                //     onclick: function() 
+                                //     {
+                                //         event.preventDefault(); //Needed? Trying to avoid old hrefs
+                                //         OpenAndFocusPopup(stockObject.stockSymbol)
+                                //     }
+                                // })
                     
                                 //Store
                                 alreadyReplacedNodes.push (nodeOriginal);
-
-                                //console.log ("b4: '" + nodeOriginal.data + "' and: '" + nodeReplacement.data + "' for '" + stockSymbol + "'.");
-
                             }
                         }
                     

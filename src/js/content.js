@@ -30,7 +30,9 @@ $( document ).ready(function()
         AddAdvertisingAtopBody ($('head'), $('body'));
     }
     
-    MessagingInitializeContentPage();
+    
+    Initialize();
+
 });
 
 //REFRESH NOW
@@ -45,13 +47,27 @@ ChromeStorageOnChanged (KEY_DESTINATION_URL_INDEX, function (value)
     destinationUrlIndex = value;
 });
 
-Initialize();
-
 
 async function Initialize() 
 {
-    let stockSymbolArray = await LoadStockSymbolsFromFiles(["text/temp.txt"]);// ["text/nasdaqlisted.txt"] "text/otherlisted.txt"]); //["text/temp.txt"]); 
+    var stopwatch = new Stopwatch(); 
     
+    stopwatch.start();
+    console.log ("Time 01: " + stopwatch.toString());
+    
+    MessagingInitializeContentPage();
+
+    var fileList = [
+        //"text/temp.txt",
+        //"text/temp300.txt"
+        "text/temp1000.txt"
+        //"text/nasdaqlisted.txt",
+       // "text/otherlisted.txt"
+    ];
+    let stockSymbolArray = await LoadStockSymbolsFromFiles(fileList); 
+    
+    console.log ("Time 02: " + stopwatch.toString());
+
     /*
     let stockSymbolArray = [
         {"stockSymbol": "AA", "stockName": "the a and a"}, 
@@ -63,30 +79,39 @@ async function Initialize()
 
     ArraySortReverseAlphabetical(stockSymbolArray);
 
-    let replacementCount = ReplaceAllSymbolsWithinHTMLElements(stockSymbolArray);
+    console.log ("Time 03: " + stopwatch.toString());
+
+    let replacementCount = await ReplaceAllSymbolsWithinHTMLElements(stockSymbolArray);
+
+    console.log ("Time 04: " + stopwatch.toString());
 
     LogConsoleOutput (function ()
     {
         console.log (replacementCount + " replacements using " + stockSymbolArray.length + " symbols.");
     });
     
-    AddEventListenerToAllElementsByName (STOCK_SYMBOL_NAME, 
-        "click", 
-        OnClickForStockSymbol,
-    );
     console.log("Initialize() Complete")
+    stopwatch.stop();
+    console.log ("Time 05: " + stopwatch.toString());
 }
 
 
-function WaitForSeconds(delay) {
-    console.log("starting slow promise")
+function WaitForNextFrame() 
+{
+    WaitForMilliseconds(10);
+}
+
+function WaitForMilliseconds(delayMS) 
+{
+    //console.log("START WaitMilliseconds("  + delayMS +")");
+
     return new Promise(resolve => {
       setTimeout(function() {
-        resolve("slow")
-        console.log("slow promise is done")
-      }, delay * 1000)
+        resolve("What is this?")
+        //console.log("END WaitMilliseconds("  + delayMS +")");
+      }, delayMS)
     })
-  }
+}
 
 function OnClickForStockSymbol(stockSymbol) 
 {

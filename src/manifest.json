@@ -24,6 +24,7 @@
         "js": [
             "3rdParty/jquery-3.5.0.min.js", 
             "3rdParty/tooltipster/dist/js/tooltipster.bundle.min.js",
+            "3rdParty/js-stopwatch/stopwatch.js",
             "js/classes/stock.js",
             "js/advertising.js",
             "js/constants.js",
@@ -39,6 +40,8 @@
     "web_accessible_resources":
     [
       "text/temp.txt",
+      "text/temp300.txt",
+      "text/temp1000.txt",
       "text/nasdaqlisted.txt",
       "text/otherlisted.txt"
     ]

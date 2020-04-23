@@ -48,20 +48,6 @@ function LogConsoleOutput (fun)
     console.log ("************************************");
 }
 
-
-function AddEventListenerToAllElementsByName (elementName, eventName, f)
-{
-    var buttons = document.getElementsByName (elementName);
-
-    for (let b = 0; b < buttons.length; b++) 
-    {
-        buttons[b].addEventListener (
-            eventName, 
-            f
-        );
-    }
-}
-
 var lastPopup;
 function OpenAndFocusPopup(stockSymbol) 
 {
@@ -103,7 +89,7 @@ function OpenAndFocusPopup(stockSymbol)
  }
 
 
-function ReplaceAllSymbolsWithinHTMLElements(stockObjectArray) 
+async function ReplaceAllSymbolsWithinHTMLElements(stockObjectArray) 
 {
     let replacementCount = 0;
 
@@ -113,25 +99,34 @@ function ReplaceAllSymbolsWithinHTMLElements(stockObjectArray)
     var elements = document.getElementsByTagName('*');
     let alreadyReplacedNodes = [];
 
+    var totalRefreshes = 10;
+    var totalCountToNextRefresh = totalRefreshes / stockObjectArray.length;
+    var currentCountToNextRefresh = 0;
+
     for (var i = 0; i < stockObjectArray.length; i++)
     {
         if (!alreadyReplacedValues.includes (stockObjectArray[i].stockSymbol))
         {
             alreadyReplacedValues.push (stockObjectArray[i].stockSymbol);
-            var innerReplacementCount = ReplaceOneSymbolsWithinHTMLElements (alreadyReplacedNodes, elements, stockObjectArray[i]);
+            var innerReplacementCount = await ReplaceOneSymbolsWithinHTMLElements (alreadyReplacedNodes, elements, stockObjectArray[i]);
             replacementCount += innerReplacementCount;
+
+            if (++currentCountToNextRefresh > totalCountToNextRefresh)
+            {
+                currentCountToNextRefresh = 0;
+                WaitForNextFrame();
+            }
         }
     }
     return replacementCount;
 
 }
 
-function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, stockObject) 
+async function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, stockObject) 
 {
     let nodeMatches = 0;
     let replacementCount = 0;
     let totalChecks = 0;
-    
 
     loop1:
     for (var i = 0; i < elements.length; i++) 
@@ -200,6 +195,7 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, sto
                             stockSymbol.length >= NEEDLE_MIN_LENGTH && 
                             !alreadyReplacedNodes.includes (nodeOriginal))
                         {
+
                             //Does it contain "AAPL"
                             var stockSymbolRegex = new RegExp(StringFriendlyRegExp(/\bXXX\b/, stockSymbol ), 'gi');
                             const isStockSymbol = textOriginal.search(stockSymbolRegex) != -1;
@@ -224,8 +220,8 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, sto
                                 divNode.appendChild(spanNode3);
 
                                 //
-                                element.replaceChild(divNode, nodeOriginal);
-
+                                ReplaceDOMElementChild(element, divNode, nodeOriginal);
+        
                                 //Set functionality
                                 spanNode2.addEventListener("click", function (event)
                                 {
@@ -246,7 +242,6 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, sto
                                 alreadyReplacedNodes.push (nodeOriginal);
                             }
                         }
-                    
                     }
                 }
             }
@@ -255,6 +250,11 @@ function ReplaceOneSymbolsWithinHTMLElements(alreadyReplacedNodes, elements, sto
     //console.log ("totalChecks: " + totalChecks);
     //console.log("n = " + nodeMatches + " and t " + replacementCount);
     return replacementCount;
+}
+
+async function ReplaceDOMElementChild (element, divNode, nodeOriginal)
+{
+    element.replaceChild(divNode, nodeOriginal);
 }
 
 function CreateNewSpanElement (text, className)

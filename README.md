@@ -1,5 +1,5 @@
 # HyperlinksForStockSymbols
-This is a chrome extension which makes Hyperlinks For Stock Symbols appear on the current webpage.
+This is a chrome extension which renders an html hyperlink for each stock symbol on the current webpage. The hyperlink clicks to the full stock price quote and info.
 
 ## Roadmap
 https://trello.com/b/lBFQudlR/hyperlinksforstocksymbols
